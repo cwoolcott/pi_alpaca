@@ -9,6 +9,26 @@ const alpaca = new Alpaca({
   paper: true,
 })
 
+const timing = 5 * 60000; //5 minutes
+
+const baselineqty = 100;
+
+const stocks = [
+    {
+        symbol : "NAT"
+    },
+    {
+        symbol : "GE"
+    },
+    {
+        symbol : "F"
+    },
+    {
+        symbol : "M"
+    }
+];
+
+
 function start(stocks){
     console.log("start");
     console.log(stocks);
@@ -18,90 +38,92 @@ function start(stocks){
     }
 }
 
-function getBars (symbol) {
+function getBars (stock) {
     // Get daily price data for MESO over the last 5 trading minutes.
     alpaca.getBars(
         'minute',
-        symbol,
+        stock.symbol,
         {
             limit: 5
         }
     ).then((barset) => {
-        const symbol_bars = barset[symbol]
+        const symbol_bars = barset[stock.symbol]
         const week_open = symbol_bars[0].o     
         const week_close = symbol_bars.slice(-1)[0].c
         const percent_change = (week_close - week_open) / week_open * 100
 
-        console.log(`${symbol} moved ${percent_change}% over the last 5 minutes`)
+        console.log(`${stock.symbol} moved ${percent_change}% over the last 5 minutes`)
 
-        getLatest(symbol, percent_change)
+        getLatest(stock, percent_change)
     })
 };
 
-function getLatest(symbol, percent_change){
-    alpaca.getPosition(symbol)
+function getLatest(stock, percent_change){
+    alpaca.getPosition(stock.symbol)
         .then((position) => {
-            order(symbol,percent_change, position)
+            order(stock, percent_change, position)
         })
         .catch((e) => {
-            order(symbol,percent_change, {qty:1})
+            order(stock, percent_change, {qty:baselineqty})
         })
 }
 
-function order(symbol, percent_change, position){
+function order(stock, percent_change, position){
     //what to do
     let order;
     let orderAmount;
     let totalHeld = position.qty;
 
-    if (percent_change < 3){
-        order='buy';
-        orderAmount = totalHeld * 2;
-    }
-    else if (percent_change < 1){
-        order='buy';
-        orderAmount = 2;
-    }
-    else if (percent_change > 3){
+    // Buy if 
+
+    if (percent_change > 3){
+        //sell
         order='sell';
         orderAmount = totalHeld;
     }
     else if (percent_change > 1){
         order='sell';
-        orderAmount = totalHeld > 1 ? 2 : totalHeld;
+        orderAmount = parseInt(totalHeld / 2);
+    }
+    else if (percent_change < -1){
+        order='buy';
+        orderAmount = baselineqty;
+    }
+    else if (percent_change < -3){
+        order='buy';
+        orderAmount = totalHeld * 2;
     }
     else{
-        console.log("No Action with " + symbol)
+        console.log("No Action with " + stock.symbol)
     }
 
-    console.log(order,orderAmount);
-
-    alpaca.createOrder({
-        symbol: symbol,
-        qty: orderAmount,
-        side: order,
-        type: 'market',
-        time_in_force: 'day'
-    }).then((order) => {
-        console.log("order", order)
-    })
+    if (order){
+        alpaca.createOrder({
+            symbol: stock.symbol,
+            qty: orderAmount,
+            side: order,
+            type: 'market',
+            time_in_force: 'day'
+        }).then((order) => {
+            console.log("order", order)
+        })
+    }
 }
 
-const stocks = [
-    "ITUB",
-    "AYTU",
-    "VSTM"
-]
-
-setInterval(function(){ 
-    alpaca.getClock().then((clock) => {
+function checkOpenAndStart(){
+     alpaca.getClock().then((clock) => {
         if (clock.is_open){
-            start(stocks);
+           start(stocks);
         }
     });
-}, 5000);
+}
 
 
+setInterval(function(){ 
+    checkOpenAndStart();
+}, timing);
+
+checkOpenAndStart();
 
 
 
