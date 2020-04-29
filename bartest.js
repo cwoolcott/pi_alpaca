@@ -27,7 +27,16 @@ const stocks = [
     },
     {
         symbol : "M"
-    }
+    },
+    {
+        symbol : "GPOR"
+    },
+    {
+        symbol : "OPK"
+    },
+    {
+        symbol : "ABEV"
+    }     
 ];
 
 function start(stocks){
