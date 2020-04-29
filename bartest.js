@@ -1,4 +1,5 @@
-const Alpaca = require('@alpacahq/alpaca-trade-api')
+const Alpaca = require('@alpacahq/alpaca-trade-api');
+require('dotenv').config();
 //const mongojs = require("mongojs");
 
 const alpaca = new Alpaca({
@@ -27,7 +28,6 @@ const stocks = [
         symbol : "M"
     }
 ];
-
 
 function start(stocks){
     console.log("start");
@@ -61,27 +61,25 @@ function getBars (stock) {
 function getLatest(stock, percent_change){
     alpaca.getPosition(stock.symbol)
         .then((position) => {
-            order(stock, percent_change, position)
+            order(stock, percent_change, position, true)
         })
         .catch((e) => {
-            order(stock, percent_change, {qty:baselineqty})
+            order(stock, percent_change, {qty:baselineqty}, false)
         })
 }
 
-function order(stock, percent_change, position){
+function order(stock, percent_change, position, exists){
     //what to do
     let order;
     let orderAmount;
     let totalHeld = position.qty;
 
-    // Buy if 
-
-    if (percent_change > 3){
+    if (percent_change > 3 && exists){
         //sell
         order='sell';
         orderAmount = totalHeld;
     }
-    else if (percent_change > 1){
+    else if (percent_change > 1  && exists){
         order='sell';
         orderAmount = parseInt(totalHeld / 2);
     }
