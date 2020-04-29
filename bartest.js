@@ -2,11 +2,12 @@ const Alpaca = require('@alpacahq/alpaca-trade-api');
 require('dotenv').config();
 //const mongojs = require("mongojs");
 
+console.log(process.env.DEV_KEY_ID)
 const alpaca = new Alpaca({
-  //keyId: 'AK0ER7ELLB72ZRL4CIIS',
-  //secretKey: '6xwI1yk2bpr9DlhKxzcURdhrVs8f8Wn7sjQUxOIl',
-  keyId: 'PKDGCKN4NOXHJT8V4Z4V',
-  secretKey: 'Y3DRAh1ikTxJiUnp7y2uOu0RtFZjUlx2w1L5VVt1',
+  // keyId: process.env.PROD_KEY_ID,
+  // secretKey: process.env.PROD_SECRET,
+  keyId: process.env.DEV_KEY_ID,
+  secretKey: process.env.DEV_SECRET,
   paper: true,
 })
 
