@@ -133,7 +133,7 @@ function order(stock, percent_change, position, exists){
                 type: 'market',
                 time_in_force: 'day'
             }).then((order) => {
-                console.log("order", order.sm,order.side,order.qty)
+                console.log("order", order.symbol,order.side,order.qty)
             })
         }
         catch(e){
