@@ -11,32 +11,39 @@ const alpaca = new Alpaca({
   paper: true,
 })
 
-const timing = 5 * 60000; //5 minutes
+const timing = 3 * 60000; //5 minutes
 
 const baselineqty = 100;
 
 const stocks = [
     {
-        symbol : "NAT"
+        symbol : "CAPR",
+        lastmove : -1
     },
     {
-        symbol : "GE"
+        symbol : "GPOR",
+        lastmove : -1
     },
     {
-        symbol : "F"
+        symbol : "AR",
+        lastmove : -1
     },
     {
-        symbol : "M"
+        symbol : "THMO",
+        lastmove : -1
     },
     {
-        symbol : "GPOR"
+        symbol : "SM",
+        lastmove : -1
     },
     {
-        symbol : "OPK"
+        symbol : "APA",
+        lastmove : -1
     },
     {
-        symbol : "ABEV"
-    }     
+        symbol : "MTDR",
+        lastmove : -1
+    }
 ];
 
 function start(stocks){
@@ -54,7 +61,7 @@ function getBars (stock) {
         'minute',
         stock.symbol,
         {
-            limit: 5
+            limit: 3
         }
     ).then((barset) => {
         const symbol_bars = barset[stock.symbol]
@@ -83,44 +90,57 @@ function order(stock, percent_change, position, exists){
     let order;
     let orderAmount;
     let totalHeld = position.qty;
+    let lastmove = stock.lastmove;
 
-    if (percent_change > 3 && exists){
+    if (percent_change > 2 && exists){
         //sell
+        move = 1;
         order='sell';
         orderAmount = totalHeld;
     }
     else if (percent_change > 1  && exists){
+        move = 2;
         order='sell';
-        orderAmount = parseInt(totalHeld / 2);
+        orderAmount = (stock.lastmove == 2) ? totalHeld : parseInt(totalHeld / 2);
     }
     else if (percent_change < -1){
+        move = 3;
         order='buy';
         orderAmount = baselineqty;
     }
-    else if (percent_change < -3){
+    else if (percent_change < -2){
+        move = 4;
         order='buy';
         orderAmount = totalHeld * 2;
     }
     else{
+        move = -1;
         console.log("No Action with " + stock.symbol)
     }
 
+    stock.lastmove = move;
+    
     if (order){
-        alpaca.createOrder({
-            symbol: stock.symbol,
-            qty: orderAmount,
-            side: order,
-            type: 'market',
-            time_in_force: 'day'
-        }).then((order) => {
-            console.log("order", order)
-        })
+        try{
+            alpaca.createOrder({
+                symbol: stock.symbol,
+                qty: orderAmount,
+                side: order,
+                type: 'market',
+                time_in_force: 'day'
+            }).then((order) => {
+                console.log("order", order)
+            }).
+        }
+        catch(e){
+            console.log("Cant place order", e);
+        }
     }
 }
 
 function checkOpenAndStart(){
      alpaca.getClock().then((clock) => {
-        if (clock.is_open){
+        if (true){//clock.is_open){
            start(stocks);
         }
     });
