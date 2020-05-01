@@ -140,7 +140,7 @@ function order(stock, percent_change, position, exists){
 
 function checkOpenAndStart(){
      alpaca.getClock().then((clock) => {
-        if (true){//clock.is_open){
+        if (clock.is_open){
            start(stocks);
         }
     });
