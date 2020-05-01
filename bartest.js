@@ -69,8 +69,12 @@ function getBars (stock) {
         const week_close = symbol_bars.slice(-1)[0].c
         const percent_change = (week_close - week_open) / week_open * 100
 
-        console.log(`${stock.symbol} moved ${percent_change}% over the last 5 minutes`)
+        const week_vol_open = symbol_bars[0].v     
+        const week_vol_close = symbol_bars.slice(-1)[0].v
+        const percent_vol_change = (week_vol_open - week_vol_close) / week_vol_open * 100
 
+        console.log(`${stock.symbol} moved ${percent_change}% over the last ${timing/60000} minutes`);
+        console.log(`${stock.symbol} volume moved ${percent_vol_change}% over the last ${timing/60000} minutes`);
         getLatest(stock, percent_change)
     })
 };
@@ -129,7 +133,7 @@ function order(stock, percent_change, position, exists){
                 type: 'market',
                 time_in_force: 'day'
             }).then((order) => {
-                console.log("order", order)
+                console.log("order", order.sm,order.side,order.qty)
             })
         }
         catch(e){
