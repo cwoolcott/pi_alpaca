@@ -119,7 +119,7 @@ function order(stock, percent_change, position, exists){
     }
 
     stock.lastmove = move;
-    
+
     if (order){
         try{
             alpaca.createOrder({
@@ -130,7 +130,7 @@ function order(stock, percent_change, position, exists){
                 time_in_force: 'day'
             }).then((order) => {
                 console.log("order", order)
-            }).
+            })
         }
         catch(e){
             console.log("Cant place order", e);
