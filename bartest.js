@@ -11,7 +11,7 @@ const alpaca = new Alpaca({
   paper: true,
 })
 
-const timing = 3 * 60000; //5 minutes
+const timing = 5 * 60000; //5 minutes
 
 const baselineqty = 100;
 
@@ -96,7 +96,7 @@ function order(stock, percent_change, position, exists){
     let totalHeld = position.qty;
     let lastmove = stock.lastmove;
 
-    if (percent_change > 2 && exists){
+    if (percent_change > 3 && exists){
         //sell
         move = 1;
         order='sell';
@@ -112,7 +112,7 @@ function order(stock, percent_change, position, exists){
         order='buy';
         orderAmount = baselineqty;
     }
-    else if (percent_change < -2){
+    else if (percent_change < -3){
         move = 4;
         order='buy';
         orderAmount = totalHeld * 2;
