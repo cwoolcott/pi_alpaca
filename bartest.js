@@ -17,31 +17,19 @@ const baselineqty = 100;
 
 const stocks = [
     {
-        symbol : "CAPR",
+        symbol : "NNDM",
         lastmove : -1
     },
     {
-        symbol : "GPOR",
+        symbol : "INO",
         lastmove : -1
     },
     {
-        symbol : "AR",
+        symbol : "GE",
         lastmove : -1
     },
     {
-        symbol : "THMO",
-        lastmove : -1
-    },
-    {
-        symbol : "SM",
-        lastmove : -1
-    },
-    {
-        symbol : "APA",
-        lastmove : -1
-    },
-    {
-        symbol : "MTDR",
+        symbol : " F",
         lastmove : -1
     }
 ];
