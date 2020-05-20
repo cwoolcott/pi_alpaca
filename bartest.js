@@ -29,7 +29,7 @@ const stocks = [
         lastmove : -1
     },
     {
-        symbol : " F",
+        symbol : "F",
         lastmove : -1
     }
 ];
