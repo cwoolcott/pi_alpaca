@@ -65,6 +65,18 @@ const stocks = [
         lastmove : -1,
         lastlow: 1000,
         lasthigh: -1
+    },
+    {
+        symbol : "NIO",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
+    },
+    {
+        symbol : "GE",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
     }
 
 ];
@@ -120,7 +132,7 @@ function order(stock, percent_change, position, exists, close_price){
     let lastmove = stock.lastmove;
     let sellable = close_price > stock.lasthigh;
 
-    console.log("order",percent_change, exists);
+    console.log("---", stock, "change", percent_change, "exists", exists, "sellable", sellable, "---");
 
     if (percent_change > 3 && exists){
         //sell
