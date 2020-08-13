@@ -11,27 +11,62 @@ const alpaca = new Alpaca({
   paper: true,
 })
 
-const timing = 5 * 60000; //5 minutes
+let closedalert = true;
 
-const baselineqty = 100;
+const timing = 2 * 60000; //5 minutes
+
+const baselineqty = 1000;
 
 const stocks = [
     {
-        symbol : "NNDM",
-        lastmove : -1
+        symbol : "IGC",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
     },
     {
-        symbol : "INO",
-        lastmove : -1
+        symbol : "NTN",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
     },
     {
-        symbol : "GE",
-        lastmove : -1
+        symbol : "SQQQ",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
     },
     {
-        symbol : "F",
-        lastmove : -1
+        symbol : "SRNE",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
+    },
+    {
+        symbol : "SNDL",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
+    },
+    {
+        symbol : "HX",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
+    },
+    {
+        symbol : "HEXO",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
+    },
+    {
+        symbol : "ZOM",
+        lastmove : -1,
+        lastlow: 1000,
+        lasthigh: -1
     }
+
 ];
 
 function start(stocks){
@@ -58,31 +93,34 @@ function getBars (stock) {
         const percent_change = (week_close - week_open) / week_open * 100
 
         const week_vol_open = symbol_bars[0].v     
-        const week_vol_close = symbol_bars.slice(-1)[0].v
+        const week_vol_close = symbol_bars.slice(-1)[0].v //current
         const percent_vol_change = (week_vol_open - week_vol_close) / week_vol_open * 100
 
         console.log(`${stock.symbol} moved ${percent_change}% over the last ${timing/60000} minutes`);
         console.log(`${stock.symbol} volume moved ${percent_vol_change}% over the last ${timing/60000} minutes`);
-        getLatest(stock, percent_change)
+        getLatest(stock, percent_change, week_vol_close)
     })
 };
 
-function getLatest(stock, percent_change){
+function getLatest(stock, percent_change, close_price){
     alpaca.getPosition(stock.symbol)
         .then((position) => {
-            order(stock, percent_change, position, true)
+            order(stock, percent_change, position, true, close_price)
         })
         .catch((e) => {
-            order(stock, percent_change, {qty:baselineqty}, false)
+            order(stock, percent_change, {qty:baselineqty}, false, close_price)
         })
 }
 
-function order(stock, percent_change, position, exists){
+function order(stock, percent_change, position, exists, close_price){
     //what to do
     let order;
     let orderAmount;
     let totalHeld = position.qty;
     let lastmove = stock.lastmove;
+    let sellable = close_price > stock.lasthigh;
+
+    console.log("order",percent_change, exists);
 
     if (percent_change > 3 && exists){
         //sell
@@ -134,6 +172,11 @@ function checkOpenAndStart(){
      alpaca.getClock().then((clock) => {
         if (clock.is_open){
            start(stocks);
+           closedalert=true;
+        }
+        else if (closedalert==true){
+            console.log("Market Closed...");
+            closedalert=false;
         }
     });
 }
