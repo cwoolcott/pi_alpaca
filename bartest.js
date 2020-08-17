@@ -1,7 +1,8 @@
 const Alpaca = require('@alpacahq/alpaca-trade-api');
 require('dotenv').config();
 //const mongojs = require("mongojs");
-
+// DEV_KEY_ID=PKCBZOAR36S4T109L8XD
+// DEV_SECRET=27HhYiNQBs2v0vOhpRzQe39BGGQs8HWk4x8Qf1Go
 console.log(process.env.DEV_KEY_ID)
 const alpaca = new Alpaca({
   // keyId: process.env.PROD_KEY_ID,
