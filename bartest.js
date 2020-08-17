@@ -15,7 +15,7 @@ let closedalert = true;
 
 const timing = 2 * 60000; //5 minutes
 
-const baselineqty = 1000;
+const baselineqty = 500;
 
 const stocks = [
     {
