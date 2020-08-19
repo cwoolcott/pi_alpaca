@@ -13,7 +13,7 @@ const alpaca = new Alpaca({
 
 let closedalert = true;
 
-const timing = 2 * 60000; //5 minutes
+const timing = 5 * 60500; //5.25 minutes
 
 const baselineqty = 1000;
 
@@ -103,7 +103,7 @@ function getBars (stock) {
         const symbol_bars = barset[stock.symbol]
         const open_price = symbol_bars[0].o     
         const close_price = symbol_bars.slice(-1)[0].c
-        const percent_change = (close_price - open_price) / open_price * 100
+        const percent_change = ((close_price - open_price) / open_price * 100).toFixed(3);
 
         stock.latestprice = close_price;
 
@@ -124,12 +124,11 @@ function getLatest(stock, percent_change){
 
 function order(stock, percent_change, position, exists){
     //what to do
-    let order;
-    let orderAmount;
+    let order = false;
+    let orderAmount = 0;
     let lastmove = stock.lastmove;
     let totalHeld = position ? position.qty : 0;
     let sellable = stock.buyprice < stock.latestprice;
-
 
     if (percent_change > 3 && exists && sellable){
         //sell
