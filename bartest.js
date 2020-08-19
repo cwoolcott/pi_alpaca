@@ -1,8 +1,7 @@
 const Alpaca = require('@alpacahq/alpaca-trade-api');
 require('dotenv').config();
 //const mongojs = require("mongojs");
-// DEV_KEY_ID=PKCBZOAR36S4T109L8XD
-// DEV_SECRET=27HhYiNQBs2v0vOhpRzQe39BGGQs8HWk4x8Qf1Go
+
 console.log(process.env.DEV_KEY_ID)
 const alpaca = new Alpaca({
   // keyId: process.env.PROD_KEY_ID,
@@ -16,68 +15,68 @@ let closedalert = true;
 
 const timing = 2 * 60000; //5 minutes
 
-const baselineqty = 500;
+const baselineqty = 1000;
 
 const stocks = [
     {
         symbol : "IGC",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "NTN",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "SQQQ",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "SRNE",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "SNDL",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "HX",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "HEXO",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "ZOM",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "NIO",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     },
     {
         symbol : "GE",
         lastmove : -1,
-        lastlow: 1000,
-        lasthigh: -1
+        buyprice: 999,
+        latestprice: 0
     }
 
 ];
@@ -100,48 +99,45 @@ function getBars (stock) {
             limit: 3
         }
     ).then((barset) => {
-        const symbol_bars = barset[stock.symbol]
-        const week_open = symbol_bars[0].o     
-        const week_close = symbol_bars.slice(-1)[0].c
-        const percent_change = (week_close - week_open) / week_open * 100
 
-        const week_vol_open = symbol_bars[0].v     
-        const week_vol_close = symbol_bars.slice(-1)[0].v //current
-        const percent_vol_change = (week_vol_open - week_vol_close) / week_vol_open * 100
+        const symbol_bars = barset[stock.symbol]
+        const open_price = symbol_bars[0].o     
+        const close_price = symbol_bars.slice(-1)[0].c
+        const percent_change = (close_price - open_price) / open_price * 100
+
+        stock.latestprice = close_price;
 
         console.log(`${stock.symbol} moved ${percent_change}% over the last ${timing/60000} minutes`);
-        console.log(`${stock.symbol} volume moved ${percent_vol_change}% over the last ${timing/60000} minutes`);
-        getLatest(stock, percent_change, week_vol_close)
+        getLatest(stock, percent_change);
     })
 };
 
-function getLatest(stock, percent_change, close_price){
+function getLatest(stock, percent_change){
     alpaca.getPosition(stock.symbol)
         .then((position) => {
-            order(stock, percent_change, position, true, close_price)
+            order(stock, percent_change, position, true)
         })
         .catch((e) => {
-            order(stock, percent_change, {qty:baselineqty}, false, close_price)
+            order(stock, percent_change, {qty:baselineqty}, false)
         })
 }
 
-function order(stock, percent_change, position, exists, close_price){
+function order(stock, percent_change, position, exists){
     //what to do
     let order;
     let orderAmount;
-    let totalHeld = position.qty;
     let lastmove = stock.lastmove;
-    let sellable = close_price > stock.lasthigh;
+    let totalHeld = position ? position.qty : 0;
+    let sellable = stock.buyprice < stock.latestprice;
 
-    console.log("---", stock, "change", percent_change, "exists", exists, "sellable", sellable, "---");
 
-    if (percent_change > 3 && exists){
+    if (percent_change > 3 && exists && sellable){
         //sell
         move = 1;
         order='sell';
         orderAmount = totalHeld;
     }
-    else if (percent_change > 1  && exists){
+    else if (percent_change > 1  && exists && sellable){
         move = 2;
         order='sell';
         orderAmount = (stock.lastmove == 2) ? totalHeld : parseInt(totalHeld / 2);
@@ -150,16 +146,20 @@ function order(stock, percent_change, position, exists, close_price){
         move = 3;
         order='buy';
         orderAmount = baselineqty;
+        stock.buyprice = stock.latestprice;
     }
     else if (percent_change < -3){
         move = 4;
         order='buy';
         orderAmount = totalHeld * 2;
+        stock.buyprice = stock.latestprice;
     }
     else{
         move = -1;
         console.log("No Action with " + stock.symbol)
     }
+
+    console.log("---", stock, "change", percent_change, "exists", exists);
 
     stock.lastmove = move;
 
