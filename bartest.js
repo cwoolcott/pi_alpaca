@@ -116,6 +116,10 @@ function getLatest(stock, percent_change){
     alpaca.getPosition(stock.symbol)
         .then((position) => {
             //if restart, set buy price to average entry price
+            if (stock.buyprice == 999){
+                console.log("set " + stock.symbol + " to avg entry: " + position.avg_entry_price);
+                stock.buyprice = position.avg_entry_price;
+            }
             stock.buyprice = (stock.buyprice == 999) ? position.avg_entry_price : stock.buyprice; 
             order(stock, percent_change, position, true)
         })
