@@ -13,67 +13,70 @@ const alpaca = new Alpaca({
 
 let closedalert = true;
 
-const timing = 5 * 60500; //5.25 minutes
+const timing = 2 * 60500; //2.25 minutes
 
 const baselineqty = 1000;
 
+// https://www.tradingview.com/markets/stocks-usa/market-movers-most-volatile/
+//Strong Buy
+
 const stocks = [
     {
-        symbol : "IGC",
+        symbol : "BUFR",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "NTN",
+        symbol : "OSH",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "SQQQ",
+        symbol : "IBEX",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "SRNE",
+        symbol : "ETACU",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "SNDL",
+        symbol : "AFIB",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "HX",
+        symbol : "RXT",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "HEXO",
+        symbol : "CHIR",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "ZOM",
+        symbol : "SREV",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "NIO",
+        symbol : "CONN",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "GE",
+        symbol : "USXF",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
