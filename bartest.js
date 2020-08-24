@@ -10,7 +10,8 @@ const alpaca = new Alpaca({
   secretKey: process.env.DEV_SECRET,
   paper: true,
 })
-
+//PKTS7NPASO84RIWGHPTA
+//Z8PhLqW3xD9bKIzmUcRaAZNL3ZuLAHcbtSb0Qga6
 let closedalert = true;
 
 const timing = 2 * 60500; //2.25 minutes
