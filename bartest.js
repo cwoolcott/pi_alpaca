@@ -15,7 +15,7 @@ let closedalert = true;
 
 const timing = 2 * 60500; //2.25 minutes
 
-const baselineqty = 1000;
+const baselineqty = 100;
 
 // https://www.tradingview.com/markets/stocks-usa/market-movers-most-volatile/
 //Strong Buy
