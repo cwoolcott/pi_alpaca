@@ -145,12 +145,12 @@ function order(stock, percent_change, position, exists){
         order='sell';
         orderAmount = totalHeld;
     }
-    else if (percent_change > 0.5  && exists && sellable){
+    else if (percent_change > 0.4  && exists && sellable){
         move = 2;
         order='sell';
         orderAmount = (stock.lastmove == 2) ? totalHeld : parseInt(totalHeld / 2);
     }
-    else if (percent_change < -0.5){
+    else if (percent_change < -0.4){
         move = 3;
         order='buy';
         orderAmount = baselineqty;
