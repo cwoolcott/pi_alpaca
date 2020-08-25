@@ -10,8 +10,7 @@ const alpaca = new Alpaca({
   secretKey: process.env.DEV_SECRET,
   paper: true,
 })
-//PKTS7NPASO84RIWGHPTA
-//Z8PhLqW3xD9bKIzmUcRaAZNL3ZuLAHcbtSb0Qga6
+
 let closedalert = true;
 
 const timing = 2 * 60500; //2.25 minutes
@@ -140,24 +139,24 @@ function order(stock, percent_change, position, exists){
     let totalHeld = position ? position.qty : 0;
     let sellable = stock.buyprice < stock.latestprice;
 
-    if (percent_change > 3 && exists && sellable){
+    if (percent_change > 1.5 && exists && sellable){
         //sell
         move = 1;
         order='sell';
         orderAmount = totalHeld;
     }
-    else if (percent_change > 1  && exists && sellable){
+    else if (percent_change > 0.5  && exists && sellable){
         move = 2;
         order='sell';
         orderAmount = (stock.lastmove == 2) ? totalHeld : parseInt(totalHeld / 2);
     }
-    else if (percent_change < -1){
+    else if (percent_change < -0.5){
         move = 3;
         order='buy';
         orderAmount = baselineqty;
         stock.buyprice = stock.latestprice;
     }
-    else if (percent_change < -3){
+    else if (percent_change < -1.5){
         move = 4;
         order='buy';
         orderAmount = totalHeld * 2;
