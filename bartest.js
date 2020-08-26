@@ -15,7 +15,7 @@ let closedalert = true;
 
 const timing = 2 * 60500; //2.25 minutes
 
-const baselineqty = 100;
+const baselineqty = 200;
 
 // https://www.tradingview.com/markets/stocks-usa/market-movers-most-volatile/
 //Strong Buy
@@ -139,24 +139,24 @@ function order(stock, percent_change, position, exists){
     let totalHeld = position ? position.qty : 0;
     let sellable = stock.buyprice < stock.latestprice;
 
-    if (percent_change > 1.5 && exists && sellable){
+    if (percent_change < 1.5 && exists && sellable){
         //sell
         move = 1;
         order='sell';
         orderAmount = totalHeld;
     }
-    else if (percent_change > 0.4  && exists && sellable){
+    else if (percent_change < 0.4  && exists && sellable){
         move = 2;
         order='sell';
         orderAmount = (stock.lastmove == 2) ? totalHeld : parseInt(totalHeld / 2);
     }
-    else if (percent_change < -0.4){
+    else if (percent_change > -0.4){
         move = 3;
         order='buy';
         orderAmount = baselineqty;
         stock.buyprice = stock.latestprice;
     }
-    else if (percent_change < -1.5){
+    else if (percent_change > -1.5){
         move = 4;
         order='buy';
         orderAmount = totalHeld * 2;
