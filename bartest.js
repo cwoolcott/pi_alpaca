@@ -6,8 +6,10 @@ console.log(process.env.DEV_KEY_ID)
 const alpaca = new Alpaca({
   // keyId: process.env.PROD_KEY_ID,
   // secretKey: process.env.PROD_SECRET,
-  keyId: process.env.DEV_KEY_ID,
-  secretKey: process.env.DEV_SECRET,
+  // keyId: process.env.DEV_KEY_ID,
+  // secretKey: process.env.DEV_SECRET,
+  keyId: "PKQZAUKAPDH0277W9B6P",
+  secretKey: "yBAwWDZ1oYfKS0972WZ0B6DYmh/EUWDrRcNymNJi",
   paper: true,
 })
 
@@ -19,69 +21,39 @@ const baselineqty = 200;
 
 // https://www.tradingview.com/markets/stocks-usa/market-movers-most-volatile/
 //Strong Buy
+//Best Long-Term Stocks
 
 const stocks = [
     {
-        symbol : "BUFR",
+        symbol : "DPZ",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "OSH",
+        symbol : "MSCI",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "IBEX",
+        symbol : "MSFT",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "ETACU",
+        symbol : "PYPL",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "AFIB",
-        lastmove : -1,
-        buyprice: 999,
-        latestprice: 0
-    },
-    {
-        symbol : "RXT",
-        lastmove : -1,
-        buyprice: 999,
-        latestprice: 0
-    },
-    {
-        symbol : "CHIR",
-        lastmove : -1,
-        buyprice: 999,
-        latestprice: 0
-    },
-    {
-        symbol : "SREV",
-        lastmove : -1,
-        buyprice: 999,
-        latestprice: 0
-    },
-    {
-        symbol : "CONN",
-        lastmove : -1,
-        buyprice: 999,
-        latestprice: 0
-    },
-    {
-        symbol : "USXF",
+        symbol : "TMO",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     }
-
 ];
 
 function start(stocks){
@@ -139,24 +111,24 @@ function order(stock, percent_change, position, exists){
     let totalHeld = position ? position.qty : 0;
     let sellable = stock.buyprice < stock.latestprice;
 
-    if (percent_change < 1.5 && exists && sellable){
+    if (percent_change > 1.5 && exists && sellable){
         //sell
         move = 1;
         order='sell';
         orderAmount = totalHeld;
     }
-    else if (percent_change < 0.4  && exists && sellable){
+    else if (percent_change > 0.4  && exists && sellable){
         move = 2;
         order='sell';
         orderAmount = (stock.lastmove == 2) ? totalHeld : parseInt(totalHeld / 2);
     }
-    else if (percent_change > -0.4){
+    else if (percent_change < -0.4){
         move = 3;
         order='buy';
         orderAmount = baselineqty;
         stock.buyprice = stock.latestprice;
     }
-    else if (percent_change > -1.5){
+    else if (percent_change < -1.5){
         move = 4;
         order='buy';
         orderAmount = totalHeld * 2;
