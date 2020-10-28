@@ -15,7 +15,7 @@ const alpaca = new Alpaca({
 
 let closedalert = true;
 
-const timing = 2 * 60500; //2.25 minutes
+const timing = 1 * 67500; //2.25 minutes
 
 const baselineqty = 200;
 
