@@ -25,31 +25,31 @@ const baselineqty = 200;
 
 const stocks = [
     {
-        symbol : "DPZ",
+        symbol : "TUP",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "MSCI",
+        symbol : "TTMI",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "MSFT",
+        symbol : "TGH",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "PYPL",
+        symbol : "SCKT",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
     },
     {
-        symbol : "TMO",
+        symbol : "MRO",
         lastmove : -1,
         buyprice: 999,
         latestprice: 0
@@ -109,7 +109,7 @@ function order(stock, percent_change, position, exists){
     let orderAmount = 0;
     let lastmove = stock.lastmove;
     let totalHeld = position ? position.qty : 0;
-    let sellable = stock.buyprice < stock.latestprice;
+    let sellable = true;//stock.buyprice < stock.latestprice;
 
     if (percent_change > 1.5 && exists && sellable){
         //sell
