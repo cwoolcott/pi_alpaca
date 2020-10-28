@@ -8,8 +8,8 @@ const alpaca = new Alpaca({
   // secretKey: process.env.PROD_SECRET,
   // keyId: process.env.DEV_KEY_ID,
   // secretKey: process.env.DEV_SECRET,
-  keyId: "PKQZAUKAPDH0277W9B6P",
-  secretKey: "yBAwWDZ1oYfKS0972WZ0B6DYmh/EUWDrRcNymNJi",
+  keyId: "PKGIEM0XKRGLG8XL21U1",
+  secretKey: "h26yTrN8qx2FBhAO2mfT0w767odHs0mxtxLyqvA4",
   paper: true,
 })
 
